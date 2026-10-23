@@ -3,50 +3,79 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>狗狗冒險之旅 - 地區挑戰</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/quiz_page_styles.css?v=3">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#140e08">
+    <title>挑戰 - 狗子冒險之旅</title>
+    <link rel="icon" href="images/shiba.webp" type="image/webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+    <link rel="stylesheet" href="css/game.css">
 </head>
 
-<body class=""><!-- The class will be inserted dynamically via JS -->
-    <div class="container">
-        <h1 id="quiz-page-title">挑戰</h1>
-
-        <!-- 玩家資訊欄 -->
-        <div class="player-info-bar">
-            <span>⚔️ 角色：<strong id="player-char">未知夥伴</strong></span>
-            <span class="meat-jerky-counter">🦴 肉乾：<strong id="meat-jerky-display">0</strong></span>
+<body class="quiz-page">
+    <!-- 第一人稱 3D 房間 -->
+    <div class="stage3d" id="stage3d">
+        <div class="world" id="world">
+            <div class="face floor" id="floor"></div>
+            <div class="face ceiling" id="ceiling"></div>
+            <div class="face wall wall-left" id="wall-left"></div>
+            <div class="face wall wall-right" id="wall-right"></div>
+            <div class="face wall wall-back" id="wall-back"></div>
+            <div class="portal" id="portal"></div>
+            <div class="board" id="board">
+                <div class="leaf leaf-l"></div>
+                <div class="leaf leaf-r"></div>
+                <div class="board-content" id="board-content">
+                    <div class="board-num" id="q-num"></div>
+                    <p class="board-q" id="q-text" aria-live="polite"></p>
+                    <p class="board-hint hidden" id="hint-text"></p>
+                </div>
+            </div>
+            <div id="tablets"></div>
         </div>
-
-        <!-- 答題區 -->
-        <div class="quiz-area" id="quiz-content-area">
-            <h2 id="question-text">正在加載問題...</h2>
-            <form id="quiz-form">
-                <ul class="quiz-options-list" id="options-container"></ul>
-                <button type="submit" class="quiz-submit-btn" id="submit-answer-btn">✦ 提交答案</button>
-            </form>
-            <p id="quiz-feedback" class="hidden"></p>
-        </div>
-
-        <!-- 導航按鈕 -->
-        <div id="quiz-navigation" class="text-center mt-20 hidden">
-            <button id="next-question-btn" class="quiz-navigation-link">下一題 →</button>
-            <a href="map_selection.html" class="quiz-navigation-link" id="back-to-map-link">← 返回地圖</a>
-        </div>
-
-        <!-- 挑戰完成 -->
-        <div id="quiz-complete-message" class="text-center mt-30 hidden">
-            <h3 id="quiz-complete-title">挑戰完成！</h3>
-            <p id="final-score-message"></p>
-            <p id="basement-unlock-message" class="hidden">🎉 恭喜！你收集到了足夠的肉乾，地下室已經解鎖了！ 🎉</p>
-            <a href="map_selection.html" class="quiz-navigation-link">← 返回地圖選擇</a>
-        </div>
+        <div class="dust" aria-hidden="true"></div>
+        <div class="vignette" aria-hidden="true"></div>
+        <div class="fader" id="fader"></div>
     </div>
 
-    <!-- 加載問題資料與答題邏輯 -->
+    <header class="hud quiz-hud">
+        <button class="icon-btn" id="exit-btn" type="button" title="返回地圖" aria-label="返回地圖">←</button>
+        <div class="hud-who">
+            <strong id="stage-title"></strong>
+            <span id="stage-topic"></span>
+        </div>
+        <div class="hud-spacer"></div>
+        <span class="chip" id="streak-chip" title="連續答對"><span aria-hidden="true">🔥</span><span class="sr-only">連續答對</span><span class="gold" id="hud-streak">0</span></span>
+        <span class="chip" id="jerky-chip" title="肉乾"><span aria-hidden="true">🦴</span><span class="sr-only">肉乾</span><span class="gold" id="hud-jerky">0</span></span>
+        <div class="hud-actions">
+            <button class="icon-btn" id="auto-read-btn" type="button"></button>
+            <button class="icon-btn" id="sound-btn" type="button"></button>
+        </div>
+        <div class="steps" id="steps" aria-hidden="true"></div>
+    </header>
+
+    <!-- 答題後的解說 -->
+    <div class="sheet hidden" id="feedback" role="status"></div>
+
+    <!-- 底部操作列 -->
+    <nav class="quiz-bar" id="quiz-bar">
+        <button class="icon-btn" id="read-btn" type="button" title="朗讀題目" aria-label="朗讀題目">🔊</button>
+        <button class="icon-btn tool-btn" id="hint-btn" type="button" title="提示（花 1 個肉乾）" aria-label="提示，花 1 個肉乾">💡<small>1</small></button>
+        <button class="icon-btn tool-btn hidden" id="ability-btn" type="button" title="智慧之眼：刪去兩個錯誤選項" aria-label="智慧之眼：刪去兩個錯誤選項">👁️<small>1</small></button>
+        <div class="hud-spacer"></div>
+        <button class="btn btn-primary" id="submit-btn" type="button" disabled>點選一塊石碑</button>
+        <button class="btn btn-primary hidden" id="next-btn" type="button">推開大門 →</button>
+    </nav>
+
+    <!-- 結算 -->
+    <div class="result-overlay hidden" id="result-overlay">
+        <section class="quiz-card panel result" id="result-card" aria-live="polite"></section>
+    </div>
+
+    <script src="js/core.js"></script>
     <script src="js/quiz_data.js"></script>
-    <script src="js/quiz_logic.js?v=3"></script>
+    <script src="js/quiz_logic.js"></script>
 </body>
 
 </html>

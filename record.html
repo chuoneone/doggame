@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#140e08">
+    <title>學習紀錄 - 狗子冒險之旅</title>
+    <link rel="icon" href="images/shiba.webp" type="image/webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+    <link rel="stylesheet" href="css/game.css">
+</head>
+
+<body>
+    <div class="scene-bg" style="background-image:url('images/library.webp')"></div>
+
+    <header class="hud">
+        <a class="icon-btn" id="back-btn" href="map_selection.html" title="返回" aria-label="返回">←</a>
+        <div class="hud-who"><strong>📒 學習紀錄</strong><span>給同學與老師查看的答題歷程</span></div>
+        <div class="hud-spacer"></div>
+        <button class="btn btn-sm btn-ghost" id="export-btn" type="button">⬇ 匯出 CSV</button>
+    </header>
+
+    <main class="record-main">
+        <div class="summary-grid" id="summary"></div>
+
+        <section class="record-section panel">
+            <h2>各關卡表現</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>關卡</th><th>單元</th><th>最佳星等</th><th>挑戰次數</th><th>累計正確率</th></tr></thead>
+                    <tbody id="stage-rows"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="record-section panel">
+            <h2>常錯的題目</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>題目</th><th>關卡</th><th>錯誤次數</th><th>正確答案</th></tr></thead>
+                    <tbody id="wrong-rows"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="record-section panel">
+            <h2>最近作答 <button class="btn btn-sm btn-danger" id="clear-btn" type="button">清除紀錄</button></h2>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>時間</th><th>關卡</th><th>題目</th><th>作答</th><th>結果</th></tr></thead>
+                    <tbody id="history-rows"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/core.js"></script>
+    <script src="js/record.js"></script>
+</body>
+
+</html>
